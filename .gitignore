@@ -1,0 +1,9 @@
+/.idea
+/Nika/__pycache__
+/venv
+/build
+/dist
+/logs
+/Nika.egg-info
+deploy
+setup.py
