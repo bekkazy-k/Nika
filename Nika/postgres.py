@@ -46,19 +46,14 @@ class PostgresConn:
             self.__pool.closeall
         print("PostgreSQL connection pool is closed")
 
-    def execute(self):
-        # connection = self.get_conn()
-        # cursor = connection.cursor()
-        # cursor.execute("select * FROM vbiuser.mobile order by 1 asc")
-        # mobile_records = cursor.fetchmany(size=100)
-        #
-        # for row in mobile_records:
-        #     print(row)
-        #
-        # cursor.close()
-        #
-        # self.close_conn(connection)
-        pass
+    def execute(self, query):
+        connection = self.get_conn()
+        cursor = connection.cursor()
+        cursor.execute(query)
+        result_records = cursor.fetchmany(size=1000)
+        cursor.close()
+        self.close_conn(connection)
+        return result_records
 
     def insert(self, table, cols: list, rows: list):
         connection = None
