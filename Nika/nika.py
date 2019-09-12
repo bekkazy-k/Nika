@@ -129,19 +129,10 @@ class Nika:
         msg = self.process_data(msg)
         msg = self.post_process_data(msg)
         msg = self.prepare_to_send(msg)
-        try:
-            self.send_data(msg)
-        except TypeError:
-            text = error.handle()
-            self.log('E', text)
-            os._exit(1)
-        except BaseException:
-            text = error.handle()
-            self.log('E', text)
-            os._exit(1)
+        self.send_data(msg)
 
     def start(self):
-        """
+        """listen
         :return:
         """
         try:
