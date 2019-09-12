@@ -47,6 +47,9 @@ class Logger:
         elif log_type == "W":
             if self.check_log_level("warning"):
                 self.logger.warning(msg)
+                p.yellow(msg)
+                if self.conf_type != 'dev':
+                    self.postgres.new_log(self.app_name, "W", util.escape(message))
 
         elif log_type == "E":
             if self.check_log_level("error"):
@@ -58,6 +61,9 @@ class Logger:
         elif log_type == "C":
             if self.check_log_level("critical"):
                 self.logger.critical(msg)
+                p.red(msg)
+                if self.conf_type != 'dev':
+                    self.postgres.new_log(self.app_name, "C", util.escape(message))
 
     def check_log_level(self, level):
         """
