@@ -81,8 +81,8 @@ class PostgresConn:
             else:
                 raise ConnectionError(f'Unknown error: {str(error)}')
 
-    def new_log(self, src_project_name, log_type, log_text):
-        self.insert('vbiuser.logs', ['created_at', 'updated_at', 'source', 'log_type', 'log_text'],
+    def new_log(self, table_to_log, src_project_name, log_type, log_text):
+        self.insert(table_to_log, ['created_at', 'updated_at', 'source', 'log_type', 'log_text'],
                     [datetime.datetime.now(), datetime.datetime.now(), src_project_name, log_type, log_text])
 
 

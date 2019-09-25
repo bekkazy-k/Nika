@@ -56,7 +56,8 @@ class Nika:
         try:
             app_name = self.conf.get('Nika.name')
             log_level = self.conf.get('Logger.level')
-            lg = logger.Logger(app_name, self.config_type, log_level, self.pg)
+            table_to_log = self.conf.get('Logger.table_to_log')
+            lg = logger.Logger(app_name, self.config_type, log_level, self.pg, table_to_log)
             return lg.log
         except FileNotFoundError:
             text = error.handle()
