@@ -5,7 +5,7 @@ from Nika import util, colorprint as p
 
 
 class Logger:
-    def __init__(self, app_name, conf_type, log_level, pg, table_to_log):
+    def __init__(self, app_name, conf_type, log_level, pg):
         """
         Создает логгер.
         :param app_name: Имя приложения
@@ -18,7 +18,6 @@ class Logger:
         self.logger = logging.getLogger(self.app_name)
         self.logger.setLevel(logging.INFO)
         self.postgres = pg
-        self.table_to_log = table_to_log
         self.path_to_log = os.path.join(os.getcwd(), 'logs')
         self.log_file_name = None
         self.fh = None
