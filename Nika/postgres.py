@@ -7,13 +7,15 @@ from Nika import colorprint as p
 
 
 class PostgresConn:
-    def __init__(self, user, password, host, port, database):
+    def __init__(self, user, password, host, port, database, table_to_log):
         self.__pool = None
         self.user = user
         self.password = password
         self.host = host
         self.port = port
         self.database = database
+
+        self.table_to_log = table_to_log
 
         self.connect()
 
@@ -82,7 +84,7 @@ class PostgresConn:
                 raise ConnectionError(f'Unknown error: {str(error)}')
 
     def new_log(self, src_project_name, log_type, log_text):
-        self.insert('vbiuser.logs', ['created_at', 'updated_at', 'source', 'log_type', 'log_text'],
+        self.insert(self.table_to_log, ['created_at', 'updated_at', 'source', 'log_type', 'log_text'],
                     [datetime.datetime.now(), datetime.datetime.now(), src_project_name, log_type, log_text])
 
 

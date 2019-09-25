@@ -37,7 +37,8 @@ class Nika:
             host = self.conf.get('Postgres.host')
             port = self.conf.get('Postgres.port')
             database = self.conf.get('Postgres.database')
-            return postgres.PostgresConn(user, password, host, port, database)
+            table_to_log = self.conf.get('Logger.table_to_log')
+            return postgres.PostgresConn(user, password, host, port, database, table_to_log)
         except FileNotFoundError:
             text = error.handle()
             self.log('E', text)
