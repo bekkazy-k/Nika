@@ -55,7 +55,7 @@ import json
 '''
 
 
-# "SUBS_KEY/BAN": "",  - will be created when create new instance of Responce
+# "SUBS_KEY/BAN": "",  - will be created when create new instance of Response
 class Response:
     def __init__(self, transaction_name=None, event_id=None, msisdn=None, event_timestamp=None,
                  source_event_timestamp=None, source=None, resp_type='ban', resp_val=0):

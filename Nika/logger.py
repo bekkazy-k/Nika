@@ -8,8 +8,9 @@ class Logger:
     def __init__(self, app_name, conf_type, log_level, pg):
         """
         Создает логгер.
-        :param app_name: Имя приложения
-        :param log_level: Уровень логирования
+        :param app_name: (str) Имя приложения
+        :param conf_type: (str) Тип конфигураций (prod | dev)
+        :param log_level: (str) Уровень логирования
         :param pg: Инстанс подключения к PostgreSql
         """
         self.app_name = app_name
@@ -31,8 +32,8 @@ class Logger:
     def log(self, log_type, msg):
         """
         Метод для записи логов
-        :param log_type: Тип лога: D, I, W, E, C
-        :param msg: Текст лога
+        :param log_type: (str) Тип лога: D, I, W, E, C
+        :param msg: (str) Текст лога
         """
         self.check_log_folder()
         message = msg
@@ -62,7 +63,7 @@ class Logger:
     def check_log_level(self, level):
         """
         Проверяет тип лога из конфигов и входящих логов
-        :param level: Уровень лога
+        :param level: (str) Уровень лога
         """
         if self.log_level == "debug":
             return True
@@ -78,20 +79,11 @@ class Logger:
 
     def check_log_folder(self):
         """
-        Проверяет наличие папки по дате, при необходимости создает папку
+        Проверяет наличие папки лога по дате, при необходимости создает папку
         """
         name = datetime.today().strftime('%Y-%m-%d')
-        # if not os.path.isfile(self.path_to_log + "/" + name + ".log"):
-        if self.log_file_name is None:
-            self.fh = logging.FileHandler(self.path_to_log + "/" + name + ".log", encoding="UTF-8")
-            formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-            self.fh.setFormatter(formatter)
-            self.logger.addHandler(self.fh)
 
-            self.log_file_name = name
-
-        if self.log_file_name != name:
-            # Create the logging file, if file is not found
+        if self.log_file_name is None and self.log_file_name != name:
             self.fh = logging.FileHandler(self.path_to_log + "/" + name + ".log", encoding="UTF-8")
             formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
             self.fh.setFormatter(formatter)

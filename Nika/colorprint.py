@@ -73,7 +73,7 @@ def pr(*args, c=None, sep=' ', end='\n'):
 def get_color_from_str(p_str, pos):
     tmp_str = p_str.replace(" ", '').replace(",", '')
     if len(tmp_str) < pos:
-        False
+        return False
     else:
         return tmp_str[pos-1:pos]
 
