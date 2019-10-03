@@ -18,7 +18,9 @@ class Nika:
         self.log('I', 'Program started!')
 
     def conf_init(self):
-        """ Инициализация конфигов """
+        """
+        Инициализация конфигов
+        """
         try:
             return config.Config(self.config_type)
         except BaseException:
@@ -29,7 +31,9 @@ class Nika:
 
 
     def postgres_init(self):
-        """ Инициализация подключения к PostgreSql """
+        """
+        Инициализация подключения к PostgreSql
+        """
         try:
             user = self.conf.get('Postgres.user')
             password = self.conf.get('Postgres.password')
@@ -48,7 +52,9 @@ class Nika:
             os._exit(1)
 
     def log_init(self):
-        """ Инициализация инстанса логирования """
+        """
+        Инициализация инстанса логирования
+        """
         try:
             app_name = self.conf.get('Nika.name')
             log_level = self.conf.get('Logger.level')
@@ -64,7 +70,9 @@ class Nika:
             os._exit(1)
 
     def console_info(self):
-        """ При запуске выводит информацию о приложении в консоль """
+        """
+        При запуске выводит информацию о приложении в консоль
+        """
         if self.conf.get('Nika.srcData') == "kafka":
             p.pr("##", f'Source data is: "Kafka". Topic: "{self.conf.get("kafkaConsumer.topic")}". '
                  f'Brokers: {self.conf.get("kafkaConsumer.brokers")}', c='b,c')
@@ -75,7 +83,9 @@ class Nika:
         p.pr("################################################################################################", c='b')
 
     def init_trg_connection(self):
-        """ Создает объект Producer и соединение к кафке """
+        """
+        Создает объект Producer и соединение к кафке
+        """
         if self.conf.get("Nika.trgData") == "kafka":
             topic = self.conf.get("kafkaProducer.topic")
             brokers = self.conf.get("kafkaProducer.brokers").replace(' ', '').replace('\"', '').split(',')
@@ -125,7 +135,9 @@ class Nika:
         self.send_data(msg)
 
     def start(self):
-        """ Создает объект Сonsumer, начиная слушать кафку """
+        """
+        Создает объект Сonsumer, начиная слушать кафку
+        """
         try:
             self.init_trg_connection()
         except BaseException:

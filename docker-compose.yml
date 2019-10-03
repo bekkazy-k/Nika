@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+  zookeeper1:
+    container_name: zookeeper1
+    image: confluentinc/cp-zookeeper
+    network_mode: "host"
+    ports:
+    - "12181:12181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 12181
+      ZOOKEEPER_SERVERS: localhost:12888:13888;localhost:14888:15888
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    volumes:
+      - /var/data/zk1:/var/lib/zookeeper/data
+
+
+  zookeeper2:
+    container_name: zookeeper2
+    image: confluentinc/cp-zookeeper
+    network_mode: "host"
+    ports:
+      - "12182:12182"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 12182
+      ZOOKEEPER_SERVERS: localhost:12888:13888;localhost:14888:15888
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    volumes:
+      - /var/data/zk2:/var/lib/zookeeper/data
+
+
+  kafka1:
+    container_name: kafka1
+    image: confluentinc/cp-kafka
+    depends_on:
+      - zookeeper1
+    network_mode: "host"
+    ports:
+      - "19092:19092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: localhost:12181,localhost:12182/big-data
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: PLAINTEXT
+    volumes:
+      - /var/data/kafka1:/var/lib/kafka/data
+
+
+  kafka2:
+    container_name: kafka2
+    image: confluentinc/cp-kafka
+    depends_on:
+      - zookeeper2
+    network_mode: "host"
+    ports:
+      - "19093:19093"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: localhost:12181,localhost:12182/big-data
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: PLAINTEXT
+    volumes:
+      - /var/data/kafka2:/var/lib/kafka/data
