@@ -22,10 +22,3 @@ def error_handler(func):
             return None
     return func_wrapper
 
-
-# @error_handler
-# def hello(a, b):
-#     print(a/b)
-#
-#
-# hello(5, 0)

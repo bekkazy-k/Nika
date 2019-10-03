@@ -1,11 +1,11 @@
 from Nika import config, postgres, logger, consumer, producer, error, util, colorprint as p
-import sys, os
+import os
 
 
 class Nika:
     def __init__(self, config_type='dev'):
         p.pr("################################################################################################", c='b')
-        p.pr("##", f'Nika Started with config', config_type, c='b,c,y')
+        p.pr("##", f'Nika started with config', config_type, c='b,c,y')
         self.config_type = config_type
         self.conf = self.conf_init()
         self.pg = self.postgres_init()
@@ -18,41 +18,37 @@ class Nika:
         self.log('I', 'Program started!')
 
     def conf_init(self):
-        """
-        Инициализация конфигов
-        """
+        """ Инициализация конфигов """
         try:
             return config.Config(self.config_type)
         except BaseException:
             text = error.handle()
             self.log('E', text)
-            # sys.exit(0)
             os._exit(1)
         pass
 
+
     def postgres_init(self):
+        """ Инициализация подключения к PostgreSql """
         try:
             user = self.conf.get('Postgres.user')
             password = self.conf.get('Postgres.password')
             host = self.conf.get('Postgres.host')
             port = self.conf.get('Postgres.port')
             database = self.conf.get('Postgres.database')
-            return postgres.PostgresConn(user, password, host, port, database)
+            table_to_log = self.conf.get('Logger.table_to_log')
+            return postgres.PostgresConn(user, password, host, port, database, table_to_log)
         except FileNotFoundError:
             text = error.handle()
             self.log('E', text)
-            # sys.exit(0)
             os._exit(1)
         except BaseException:
             text = error.handle()
             self.log('E', text)
-            # sys.exit(0)
             os._exit(1)
 
     def log_init(self):
-        """
-        Инициализация инстанса логирования.
-        """
+        """ Инициализация инстанса логирования """
         try:
             app_name = self.conf.get('Nika.name')
             log_level = self.conf.get('Logger.level')
@@ -61,20 +57,16 @@ class Nika:
         except FileNotFoundError:
             text = error.handle()
             self.log('E', text)
-            # sys.exit(0)
             os._exit(1)
         except BaseException:
             text = error.handle()
             self.log('E', text)
-            # sys.exit(0)
             os._exit(1)
 
     def console_info(self):
-        """
-        Выводит информация о приложении в консоль.
-        """
+        """ При запуске выводит информацию о приложении в консоль """
         if self.conf.get('Nika.srcData') == "kafka":
-            p.pr("##", f'Source data is: "Kafka". Topic: {self.conf.get("kafkaConsumer.topic")}. '
+            p.pr("##", f'Source data is: "Kafka". Topic: "{self.conf.get("kafkaConsumer.topic")}". '
                  f'Brokers: {self.conf.get("kafkaConsumer.brokers")}', c='b,c')
 
         if self.conf.get("Nika.trgData") == "kafka":
@@ -83,6 +75,7 @@ class Nika:
         p.pr("################################################################################################", c='b')
 
     def init_trg_connection(self):
+        """ Создает объект Producer и соединение к кафке """
         if self.conf.get("Nika.trgData") == "kafka":
             topic = self.conf.get("kafkaProducer.topic")
             brokers = self.conf.get("kafkaProducer.brokers").replace(' ', '').replace('\"', '').split(',')
@@ -132,9 +125,7 @@ class Nika:
         self.send_data(msg)
 
     def start(self):
-        """listen
-        :return:
-        """
+        """ Создает объект Сonsumer, начиная слушать кафку """
         try:
             self.init_trg_connection()
         except BaseException:
