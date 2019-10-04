@@ -1,8 +1,18 @@
 # Nika :woman_technologist:
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
 1. [Overview](#overview)
-2. [My second title](#my-second-title)
+2. [Installation and Dependencies](#2-installation-and-dependencies)
+3. [Modules](#3-modules)
+3.1. [colorprint](#31-colorprint)
+3.2. [config](#32-config)
+3.3. [consumer](#33-consumer)
+3.4. [error](#34-error)
+3.5. [filter](#35-filter)
+3.6. [logger](#36-logger)
+3.7. [nika](#37-nika)
+3.8. [postgres](#38-postgres)
+3.9. [producer](#39-producer)
+3.10. [util](#310-util)
 ## 1. Overview 
 Some text.
 ## 2. Installation and Dependencies
