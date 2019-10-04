@@ -29,7 +29,9 @@ class PostgresConn:
         self.connect()
 
     def connect(self):
-        """ создает кэшированное подключение к базе данных """
+        """
+        Метод создает кэшированное подключение к базе данных
+        """
         try:
             self.__pool = psycopg2.pool.SimpleConnectionPool(1, 20, user=self.user, password=self.password,
                                                              host=self.host, port=self.port, database=self.database)
@@ -42,7 +44,9 @@ class PostgresConn:
                                   f'Error text: {str(error)}')
 
     def get_conn(self):
-        """ получает свободное соединение к бд и присваивает его в качестве 'key', если значение не None """
+        """
+        Метод получает свободное соединение к бд и присваивает его в качестве 'key', если значение не None
+        """
         if self.__pool:
             return self.__pool.getconn()
         else:
@@ -50,7 +54,7 @@ class PostgresConn:
 
     def close_conn(self, connection):
         """
-        закрывает неиспользуемые соединения к бд
+        Метод закрывает неиспользуемые соединения к бд
         :param connection: инстанс соединения к бд
         """
         if self.__pool:
@@ -59,14 +63,16 @@ class PostgresConn:
             raise ConnectionRefusedError("Connection pool is empty")
 
     def disconnect(self):
-        """ закрывает все соединения (даже те, которые используются в настоящее время) """
+        """
+        Метод закрывает все соединения (даже те, которые используются в настоящее время)
+        """
         if self.__pool:
             self.__pool.closeall
         print("PostgreSQL connection pool is closed")
 
     def execute(self, query):
         """
-        при подключении к бд выполняет получаемый запрос к бд
+        При подключении к бд метод выполняет получаемый запрос к бд
         :param query: (str) прямой запрос для бд
         :return: массив(list) запросов
         """
@@ -81,7 +87,7 @@ class PostgresConn:
 
     def insert(self, table, cols: list, rows: list):
         """
-        вставляет данные в бд
+        Метод вставляет данные в бд
         :param table: (str) таблица в бд
         :param cols: массив(list) имен колонок в бд
         :param rows: массив(list) данных
