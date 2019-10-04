@@ -1,18 +1,19 @@
 # Nika :woman_technologist:
+    
+- [Overview](#overview)
+- [Installation and Dependencies](#2-installation-and-dependencies)
+- [Modules](#3-modules)
+    - [colorprint](#31-colorprint)
+    - [config](#32-config)
+    - [consumer](#33-consumer)
+    - [error](#34-error)
+    - [filter](#35-filter)
+    - [logger](#36-logger)
+    - [nika](#37-nika)
+    - [postgres](#38-postgres)
+    - [producer](#39-producer)
+    - [util](#310-util)
 
-1. [Overview](#overview)
-2. [Installation and Dependencies](#2-installation-and-dependencies)
-3. [Modules](#3-modules)
-3.1. [colorprint](#31-colorprint)
-3.2. [config](#32-config)
-3.3. [consumer](#33-consumer)
-3.4. [error](#34-error)
-3.5. [filter](#35-filter)
-3.6. [logger](#36-logger)
-3.7. [nika](#37-nika)
-3.8. [postgres](#38-postgres)
-3.9. [producer](#39-producer)
-3.10. [util](#310-util)
 ## 1. Overview 
 Some text.
 ## 2. Installation and Dependencies
