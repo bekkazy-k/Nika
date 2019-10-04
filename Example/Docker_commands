@@ -1,0 +1,7 @@
+docker build --network=host -t test_app_img .
+
+docker run -d --network=host --name test_app test_app_img
+
+docker exec -it test_app bash
+
+docker logs test_app
