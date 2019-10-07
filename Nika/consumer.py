@@ -31,7 +31,7 @@ class Consumer:
                                           group_id=self.group_id,
                                           bootstrap_servers=self.brokers,
                                           auto_offset_reset=self.msg_offset,
-                                          # consumer_timeout_ms=10000,   #this line needs to be uncomment for tests
+                                          consumer_timeout_ms=10000,   #this line needs to be uncommented for tests
                                           )
             print('Consumer created successfully!')
             return True
@@ -47,7 +47,7 @@ class Consumer:
         """
         for message in self.consumer:
             processor(message)
-            # return message.topic, message.value  #this line needs to be uncomment for tests
+            return message.topic, message.value  #this line needs to be uncommented for tests
 
     def close(self):
         print('Consumer closed')

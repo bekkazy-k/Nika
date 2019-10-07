@@ -1,7 +1,9 @@
 import unittest
 
-from producer import Producer
-from consumer import Consumer
+from Nika.producer import Producer
+from Nika.consumer import Consumer
+
+#There are 2 lines in consumer.py which should be uncommented for these tests.
 
 
 def handler(msg):
