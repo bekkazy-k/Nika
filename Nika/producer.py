@@ -40,7 +40,7 @@ class Producer:
             print(kafkaErr)
             return False
 
-        if record_metadata.partition:
-            return True
+        if record_metadata:
+            return True, record_metadata
         else:
             return False
