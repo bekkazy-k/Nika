@@ -30,9 +30,8 @@ class Consumer:
             self.consumer = KafkaConsumer(self.topics,
                                           group_id=self.group_id,
                                           bootstrap_servers=self.brokers,
-                                          auto_offset_reset=self.msg_offset,
-                                          consumer_timeout_ms=10000,   #this line needs to be uncommented for tests
-                                          )
+                                          auto_offset_reset=self.msg_offset)
+
             print('Consumer created successfully!')
             return True
         except BaseException as err:
@@ -47,7 +46,6 @@ class Consumer:
         """
         for message in self.consumer:
             processor(message)
-            return message.topic, message.value  #this line needs to be uncommented for tests
 
     def close(self):
         print('Consumer closed')

@@ -1,13 +1,30 @@
 import unittest
 
+from kafka import KafkaConsumer
+
 from Nika.producer import Producer
 from Nika.consumer import Consumer
 
-#There are 2 lines in consumer.py which should be uncommented for these tests.
+
+def handler(*args):
+     return args
 
 
-def handler(msg):
-    return msg
+class TestConsumer(Consumer):
+    def connect(self):
+        try:
+            self.consumer = KafkaConsumer(self.topics,
+                                          group_id=self.group_id,
+                                          bootstrap_servers=self.brokers,
+                                          auto_offset_reset=self.msg_offset,
+                                          consumer_timeout_ms=10000)
+            return True
+        except BaseException as err:
+            return False, err
+
+    def listen(self, processor):
+        for message in self.consumer:
+            return processor(message.topic, message.value)
 
 
 class TestProducerConsumer(unittest.TestCase):
@@ -20,7 +37,7 @@ class TestProducerConsumer(unittest.TestCase):
         self.producer = Producer(self.topics, self.brokers)
         self.producer_connect = self.producer.connect()
 
-        self.consumer = Consumer(self.topics, self.group_id, self.brokers)
+        self.consumer = TestConsumer(self.topics, self.group_id, self.brokers)
         self.consumer_connect = self.consumer.connect()
 
     def test_producer_connect(self):
