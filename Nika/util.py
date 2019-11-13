@@ -44,5 +44,14 @@ def unmarshall(message):
     msg = json.dumps(message)
     return msg
 
-
+def check_identical_pg(getConf):
+    if getConf("Postgres.user") != getConf("trgPostgres.user"):
+        return False
+    if getConf("Postgres.host") != getConf("trgPostgres.host"):
+        return False
+    if getConf("Postgres.port") != getConf("trgPostgres.port"):
+        return False
+    if getConf("Postgres.database") != getConf("trgPostgres.database"):
+        return False
+    return True
 

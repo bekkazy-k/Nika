@@ -112,8 +112,7 @@ class PostgresConn:
 
         except (Exception, psycopg2.Error) as error:
             if connection:
-                print(f'Failed to insert record into mobile table', error)
-                raise ConnectionError(f'Failed to insert record into mobile table. Error text: {str(error)}')
+                raise ConnectionError(f'Failed to insert record into "{table}" table. Error text: {str(error)}')
             else:
                 raise ConnectionError(f'Unknown error: {str(error)}')
 

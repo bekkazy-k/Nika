@@ -8,7 +8,7 @@ class Nika:
         p.pr("##", f'Nika started with config', config_type, c='b,c,y')
         self.config_type = config_type
         self.conf = self.conf_init()
-        self.pg = self.postgres_init()
+        self.pg = self.postgres_init('Postgres')
         self.log = self.log_init()
         self.srcData = None
         self.trgData = None
@@ -30,16 +30,16 @@ class Nika:
         pass
 
 
-    def postgres_init(self):
+    def postgres_init(self, prefix):
         """
         Инициализация подключения к PostgreSql
         """
         try:
-            user = self.conf.get('Postgres.user')
-            password = self.conf.get('Postgres.password')
-            host = self.conf.get('Postgres.host')
-            port = self.conf.get('Postgres.port')
-            database = self.conf.get('Postgres.database')
+            user = self.conf.get(prefix + '.user')
+            password = self.conf.get(prefix + '.password')
+            host = self.conf.get(prefix + '.host')
+            port = self.conf.get(prefix + '.port')
+            database = self.conf.get(prefix + '.database')
             table_to_log = self.conf.get('Logger.table_to_log')
             return postgres.PostgresConn(user, password, host, port, database, table_to_log)
         except FileNotFoundError:
@@ -80,6 +80,9 @@ class Nika:
         if self.conf.get("Nika.trgData") == "kafka":
             p.pr('##', f'Target data is: "Kafka". Topic: "{self.conf.get("kafkaProducer.topic")}". '
                  f'Brokers: {self.conf.get("kafkaProducer.brokers")}', c='b,c')
+        elif self.conf.get("Nika.trgData") == 'postgres':
+             p.pr('##', f'Target data is: "Postgres". User: "{self.conf.get("trgPostgres.user")}". Host: "{self.conf.get("trgPostgres.host")}". '
+                 f'Port: {self.conf.get("trgPostgres.port")}. DB: "{self.conf.get("trgPostgres.database")}"', c='b,c')
         p.pr("################################################################################################", c='b')
 
     def init_trg_connection(self):
@@ -92,6 +95,17 @@ class Nika:
             self.trgData = producer.Producer(topic, brokers)
             if not self.trgData.connect():
                 raise ConnectionError('Nika.trgData cannot connect to Kafka')
+                
+        elif self.conf.get("Nika.trgData") == 'postgres':
+            try:
+                if util.check_identical_pg(self.conf.get):
+                    self.trgData = self.pg
+                else:
+                    self.trgData = self.postgres_init('trgPostgres')
+            except BaseException:
+                text = error.handle()
+                self.log('E', text)
+                os._exit(1)
         else:
             raise ConnectionError(f'Nika.trgData incorrect or not found in config file. '
                                   f'Nika.trgData: {self.conf.get("Nika.trgData")}')
@@ -112,18 +126,37 @@ class Nika:
         return message
 
     def send_data(self, message):
-        if type(message) == list:
-            for i in message:
-                message_for_send = i
-                if type(i) != str:
-                    message_for_send = util.unmarshall(i)
-                self.trgData.send(message_for_send)
-        elif type(message) == dict:
-            self.trgData.send(util.unmarshall(message))
-        elif type(message) == str:
-            self.trgData.send(message)
-        else:
-            raise TypeError(f'Incorrect type of message to send. Type: {type(message)}')
+        if self.conf.get("Nika.trgData") == 'kafka':
+            if type(message) == list:
+                for i in message:
+                    message_for_send = i
+                    if type(i) != str:
+                        message_for_send = util.unmarshall(i)
+                    self.trgData.send(message_for_send)
+            elif type(message) == dict:
+                self.trgData.send(util.unmarshall(message))
+            elif type(message) == str:
+                self.trgData.send(message)
+            else:
+                raise TypeError(f'Incorrect type of message to send. Type: {type(message)}')
+
+        elif self.conf.get("Nika.trgData") == 'postgres':
+            if type(message) != tuple:
+                raise TypeError(f'Incorrect type of message to send. Type: {type(message)}. Need tuple.')
+            if type(message[0]) != str:
+                raise TypeError(f'Incorrect table name. Name: {message[0]}.')
+            if type(message[1]) != list:
+                raise TypeError(f'Incorrect type of message keys to send. Type: {type(message[1])}. Need list.')
+            if type(message[2]) != list:
+                raise TypeError(f'Incorrect type of message values to send. Type: {type(message[2])}. Need list.')
+            try:
+                self.trgData.insert(message[0], message[1], message[2])
+            except BaseException:
+                text = error.handle()
+                self.log('E', text)
+                os._exit(1)
+                
+            
 
     def process(self, message):
         msg = message.value

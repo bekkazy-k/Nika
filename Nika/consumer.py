@@ -41,6 +41,11 @@ class Consumer:
         Начинает слушать кафку
         :param processor: (func) функция обработки для каждого сообщения из кафки
         """
+        # message.topic
+        # message.partition
+        # message.offset
+        # message.key
+        # message.value
         for message in self.consumer:
             processor(message)
 
