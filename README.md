@@ -36,8 +36,6 @@ port = {port}
 database = {db_name}
 
 ```
-- Затем с помощью `Docker` запустить минимум по 2 инстанса `Kafka` и `Zookeper`. 
-Для этого запустите `docker-compose up`
 
 
 ## 4. Nika - Общая структура
